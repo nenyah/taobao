@@ -4,11 +4,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from urllib.parse import quote
-from pyquery import PyQuery as pq
-import pymongo
-import time
 import re
 import json
+from settings import *
+
 
 # chrome_options = webdriver.ChromeOptions()
 # chrome_options.add_argument('--headless')
@@ -56,13 +55,6 @@ def get_products(page):
         print(item)
 
         save_to_mongo(item)
-
-
-MONGO_URL = 'localhost'
-MONGO_DB = 'taobao'
-MONGO_COLLECTION = 'products'
-client = pymongo.MongoClient(MONGO_URL)
-db = client[MONGO_DB]
 
 
 def save_to_mongo(result):
