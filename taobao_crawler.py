@@ -19,6 +19,7 @@ wait = WebDriverWait(browser, 20)
 KEYWORD = '伊婉'
 
 urls = list()
+db = client[MONGO_TAOBAO]
 
 
 def index_page(page):
