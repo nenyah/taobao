@@ -81,21 +81,17 @@ def get_product(city_id):
     while EXISTS_DATA:
         try:
             print(f'正在爬取第{page}页')
-            url = 'http://apimobile.meituan.com/group/v4/poi/pcsearch/' + str(city_id) + '?limit=32&offset=' + \
-                str((page - 1) * 32) + '&q=' + quote(KEYWORD)
+            url = make_url(city_id, page, KEYWORD)
             print(url)
             web = requests.get(url, headers=headers)
-            # print(web.status_code)
 
         except:
             print('wrong when get')
             EXISTS_DATA = False
-            # get_product(city_id)
 
         if web.status_code == 200:
             items = parse(web)
             if len(items) == 0:
-                # raise Exception("No data")
                 print("No data")
                 EXISTS_DATA = False
             else:
