@@ -76,12 +76,13 @@ def main():
             print(f'Start to crawl: {city_id[cid]}', end=' ')
             root_url = f'http://apimobile.meituan.com/group/v4/poi/pcsearch/{cid}/?offset=0&q={KEYWORD}'
             totalcount = get_totalcount(cid, root_url)
-            print(f'Total data: {totalcount}')
-            full_data_url = make_url(cid, totalcount)
-            data = get_data(full_data_url)
-            for info in data:
-                print(info)
-                writer.writerow(info.values())
+            if totalcount:
+                print(f'Total data: {totalcount}')
+                full_data_url = make_url(cid, totalcount)
+                data = get_data(full_data_url)
+                for info in data:
+                    print(info)
+                    writer.writerow(info.values())
 
 
 if __name__ == '__main__':
