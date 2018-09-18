@@ -3,14 +3,13 @@
 
 import os
 import datetime
-import time
-import random
 import csv
 import requests
-from lxml import etree
 import logging
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(levelname)s- %(message)s')
+log = logging.info
 
 
 def clean_text(text):
@@ -22,7 +21,8 @@ class SoyoungSpider:
 
     def __init__(self, keyword):
         self.keyword = keyword
-        self.root_url = r'http://www.soyoung.com/searchNew/product'
+        self.product_url = r'http://www.soyoung.com/searchNew/product'
+        self.hospital_url = r'http://www.soyoung.com/searchNew/hospital'
         self.params = {
             'keyword': keyword,
             'cityId': '1',
@@ -53,61 +53,52 @@ class SoyoungSpider:
         self.count = 1
 
     def get_base_info(self, url):
-        info = {}
         r = requests.get(url, params=self.params, headers=self.headers)
         products = r.json()['responseData']['arr_product']
         for product in products:
+            info = {}
             info['link'] = 'http://y.soyoung.com/cp' + product['pid']
             info['hospital'] = product['hospital_name']
             info['title'] = product['title']
             info['price'] = product['price_online']
-            info['address'], info['phone'] = self.get_hospital_info(
-                info['link'])
+            info['hospital_id'] = product['hospital_id']
             self.item.append(info)
-            logging.info(f"[+] {self.count} Start to download {info['link']}")
+            log(f"[+] {self.count} Start to download {info['link']}")
             self.count += 1
-            logging.info(info)
 
     def get_hospital_info(self, url):
-        r = requests.get(url, headers=self.headers)
-        if r.status_code != 200:
-            raise Exception('Connection Error')
-
-        time.sleep(random.randint(1, 5))
-        tree = etree.HTML(r.text)
-        address_node = tree.xpath(
-            '//div[@class="hospital"]//tr[3]/td[@class="text"]/text()')
-        address = clean_text(address_node[0]) if address_node else None
-        phone_node = tree.xpath(
-            '//div[@class="hospital"]//tr[4]/td[@class="text"]/text()')
-        phone = clean_text(phone_node[0]) if phone_node else None
-        if address is None:
-            logging.info(r.text)
-            raise Exception('No content Error')
-        return address, phone
+        r = requests.get(url, params=self.params, headers=self.headers)
+        hospitals = r.json()['responseData']['hospital_list']
+        for hospital in hospitals:
+            for index in range(len(self.item)):
+                if hospital['hospital_id'] == self.item[index]['hospital_id']:
+                    self.item[index]['address'] = hospital['address']
 
     def save(self, save_path):
-        logging.info(f'[+] Total item: {len(self.item)}')
+        log(f'[+] Total item: {len(self.item)}')
 
         file = datetime.datetime.today().strftime('%Y-%m-%d') + '伊婉新氧销售情况.csv'
         path = os.path.join(save_path, file)
-        logging.info(f'[+] Start to save file to {path}')
+        log(f'[+] Start to save file to {path}')
         with open(path, "w+", newline='', encoding='utf-8') as csvfile:
             fieldnames = ['title',
                           'price',
                           'link',
                           'address',
                           'hospital',
-                          'phone']
+                          'hospital_id'  # ,
+                          # 'phone'
+                          ]
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
             writer.writeheader()
-            for row in list(set(self.item)):
+            for row in self.item:
                 writer.writerow(row)
-        logging.info('[+] Save success')
+        log('[+] Save success')
 
     def run(self):
-        self.get_base_info(self.root_url)
+        self.get_base_info(self.product_url)
+        self.get_hospital_info(self.hospital_url)
 
 
 def main():
