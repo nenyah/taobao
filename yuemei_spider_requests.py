@@ -1,10 +1,6 @@
 import requests
 import re
-import json
-from settings import *
-import csv
 import datetime
-from cityid import city_id
 import time
 import random
 from lxml import etree

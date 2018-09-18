@@ -10,6 +10,7 @@ from email.header import Header
 from email import encoders
 from pathlib import Path
 from datetime import datetime
+import sys
 
 
 class MailSender:
@@ -53,7 +54,7 @@ class MailSender:
             msg.attach(att)
         msg.attach(contents)
         try:
-            self.smtp.sendmail(self._from, [to_addr], msg.as_string())
+            self.smtp.sendmail(self._from, to_addr.split(','), msg.as_string())
             return True
         except Exception as e:
             print(str(e))
@@ -72,16 +73,17 @@ def check_latest_file(p, today):
     return counter
 
 
-def main():
+def main(date=None):
     user = 'tanyan@huadongbio.com'
     pwd = 'Hdbio1234'
-    to_addr = '366138476@qq.com'
+    to_addr = '366138476@qq.com,lucibriel@163.com'
     smtpSvr = 'smtp.exmail.qq.com'
-    subject = datetime.now().strftime('%Y%m%d') + '伊婉销售情况'
+    subject = date + '伊婉销售情况'
     content = '请查看附件'
-
-    # today = datetime.now().strftime('%Y-%m-%d')
-    today = '2018-09-05'
+    if date is None:
+        today = datetime.now().strftime('%Y-%m-%d')
+    else:
+        today = date
     p = Path(r"E:\伊婉销售情况")
 
     m = MailSender(smtpSvr, 25)
@@ -95,4 +97,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    if sys.argv[1]:
+        main(sys.argv[1])
+    else:
+        main()
