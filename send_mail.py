@@ -11,6 +11,7 @@ from email import encoders
 from pathlib import Path
 from datetime import datetime
 import sys
+import os
 
 
 class MailSender:
@@ -74,8 +75,8 @@ def check_latest_file(p, today):
 
 
 def main(date=None):
-    user = 'tanyan@huadongbio.com'
-    pwd = '######'
+    user = os.environ.get('EMAIL_NAME')
+    pwd = os.environ.get('EMAIL_PWD')
     to_addr = '366138476@qq.com,lucibriel@163.com'
     smtpSvr = 'smtp.exmail.qq.com'
     subject = date + '伊婉销售情况'
