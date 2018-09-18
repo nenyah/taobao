@@ -75,7 +75,7 @@ def check_latest_file(p, today):
 
 def main(date=None):
     user = 'tanyan@huadongbio.com'
-    pwd = 'Hdbio1234'
+    pwd = '######'
     to_addr = '366138476@qq.com,lucibriel@163.com'
     smtpSvr = 'smtp.exmail.qq.com'
     subject = date + '伊婉销售情况'
