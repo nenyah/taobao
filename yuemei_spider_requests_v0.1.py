@@ -10,7 +10,10 @@ import requests
 from lxml import etree
 import logging
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(levelname)s- %(message)s')
+
+log = logging.info
 
 
 def clean_text(text):
@@ -44,14 +47,14 @@ class YueMeiSpider:
 
     def __get(self, url):
         try:
-            logging.info(f'[+] {self.count} Start to get {url}')
+            log(f'[+] {self.count} Start to get {url}')
             r = requests.get(url, headers=self.header)
             time.sleep(random.randint(1, 2))
             r.encoding = 'utf-8'
             self.count += 1
             return r.text
         except ConnectionError:
-            logging.info("Can't get page")
+            log("Can't get page")
 
     def parse_url(self, response):
         tree = etree.HTML(response)
@@ -68,7 +71,7 @@ class YueMeiSpider:
             self.parse_url(self.__get(next_page_url))
 
     def parse_detal(self, url):
-        logging.info(f'[+] {self.item_count} Start to parse {url}')
+        log(f'[+] {self.item_count} Start to parse {url}')
         response = self.__get(url)
         tree = etree.HTML(response)
         title = self.__get_title(tree)
@@ -144,15 +147,15 @@ class YueMeiSpider:
 
     def show_item(self):
         for item in self.item:
-            logging.info(item)
+            log(item)
 
     def save(self, save_path):
-        logging.info(f'[+] Total downlaod: {self.count}')
-        logging.info(f'[+] Total item: {self.item_count}')
+        log(f'[+] Total downlaod: {self.count}')
+        log(f'[+] Total item: {self.item_count}')
 
         file = datetime.datetime.today().strftime('%Y-%m-%d') + '伊婉悦美销售情况.csv'
         path = os.path.join(save_path, file)
-        logging.info(f'[+] Start to save file to {path}')
+        log(f'[+] Start to save file to {path}')
         with open(path, "w+", newline='', encoding='utf-8') as csvfile:
             fieldnames = ['title',
                           'price',
@@ -165,7 +168,7 @@ class YueMeiSpider:
             writer.writeheader()
             for row in self.item:
                 writer.writerow(row)
-        logging.info('[+] Save success')
+        log('[+] Save success')
 
 
 def main():
@@ -174,7 +177,10 @@ def main():
     # 3. 爬虫运行
     # 4. 保存数据
     keyword = '伊婉'
-    save_path = r'E:\伊婉销售情况'
+    if os.name == 'nt':
+        save_path = r'E:\伊婉销售情况'
+    else:
+        save_path = '/home/steven/sales_collect'
     spider = YueMeiSpider(keyword)
     spider.crawl()
     spider.save(save_path)

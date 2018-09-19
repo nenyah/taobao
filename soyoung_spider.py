@@ -103,7 +103,10 @@ class SoyoungSpider:
 
 def main():
     keyword = '伊婉'
-    save_path = r'E:\伊婉销售情况'
+    if os.name == 'nt':
+        save_path = r'E:\伊婉销售情况'
+    else:
+        save_path = '/home/steven/sales_collect'
     spider = SoyoungSpider(keyword)
     spider.run()
     spider.save(save_path)
