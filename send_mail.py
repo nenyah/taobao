@@ -74,19 +74,24 @@ def check_latest_file(p, today):
     return counter
 
 
-def main(date=None):
+def main(date=''):
     user = os.environ.get('EMAIL_NAME')
     pwd = os.environ.get('EMAIL_PWD')
     to_addr = '366138476@qq.com,lucibriel@163.com'
     smtpSvr = 'smtp.exmail.qq.com'
-    subject = date + '伊婉销售情况'
     content = '请查看附件'
-    if date is None:
+
+    if date == '':
         today = datetime.now().strftime('%Y-%m-%d')
     else:
         today = date
-    p = Path(r"E:\伊婉销售情况")
 
+    if os.name == 'nt':
+        p = Path(r"E:\伊婉销售情况")
+    else:
+        p = Path("/home/steven/sales_collect")
+
+    subject = today + '伊婉销售情况'
     m = MailSender(smtpSvr, 25)
     m.login(user, pwd)
     for file in p.glob('*.csv'):
@@ -98,7 +103,7 @@ def main(date=None):
 
 
 if __name__ == '__main__':
-    if sys.argv[1]:
+    if len(sys.argv) > 1:
         main(sys.argv[1])
     else:
         main()
