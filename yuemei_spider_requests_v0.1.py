@@ -49,7 +49,7 @@ class YueMeiSpider:
         try:
             log(f'[+] {self.count} Start to get {url}')
             r = requests.get(url, headers=self.header)
-            time.sleep(random.randint(1, 2))
+            time.sleep(random.randint(1, 5))
             r.encoding = 'utf-8'
             self.count += 1
             return r.text

@@ -86,7 +86,7 @@ class SoyoungSpider:
                           'link',
                           'address',
                           'hospital',
-                          'hospital_id'  # ,
+                          'hospital_id'
                           # 'phone'
                           ]
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
