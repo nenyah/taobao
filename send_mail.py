@@ -76,7 +76,7 @@ def check_latest_file(p, today):
 def main(date=''):
     user = os.environ.get('EMAIL_NAME')
     pwd = os.environ.get('EMAIL_PWD')
-    to_addr = '366138476@qq.com,lucibriel@163.com'
+    to_addr = '366138476@qq.com,chengencong@huadongbio.com'
     smtpSvr = 'smtp.exmail.qq.com'
     content = '请查看附件'
 
