@@ -153,7 +153,7 @@ class YueMeiSpider:
         log(f'[+] Total downlaod: {self.count}')
         log(f'[+] Total item: {self.item_count}')
 
-        file = datetime.datetime.today().strftime('%Y-%m-%d') + '伊婉悦美销售情况.csv'
+        file = datetime.datetime.today().strftime('%Y-%m-%d') + f'{self.keyword}悦美销售情况.csv'
         path = os.path.join(save_path, file)
         log(f'[+] Start to save file to {path}')
         with open(path, "w+", newline='', encoding='utf-8') as csvfile:

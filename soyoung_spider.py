@@ -77,7 +77,7 @@ class SoyoungSpider:
     def save(self, save_path):
         log(f'[+] Total item: {len(self.item)}')
 
-        file = datetime.datetime.today().strftime('%Y-%m-%d') + '伊婉新氧销售情况.csv'
+        file = datetime.datetime.today().strftime('%Y-%m-%d') + f'{self.keyword}新氧销售情况.csv'
         path = os.path.join(save_path, file)
         log(f'[+] Start to save file to {path}')
         with open(path, "w+", newline='', encoding='utf-8') as csvfile:

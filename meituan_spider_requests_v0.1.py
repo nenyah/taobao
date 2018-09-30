@@ -8,10 +8,10 @@ from cityid import city_id
 import time
 import random
 
-KEYWORD = '伊婉'
+KEYWORD = '玻尿酸'
 _path = r"E:\伊婉销售情况"
 today = datetime.date.today()
-file = f'{_path}/{today}伊婉美团销售情况.csv'
+file = f'{_path}/{today}{KEYWORD}美团销售情况.csv'
 header = ['link', 'hospital_name', 'title', 'price']
 
 
@@ -72,7 +72,7 @@ def main():
     with open(file, "w+", newline='', encoding='utf-8') as cf:
         writer = csv.writer(cf)
         writer.writerow(header)
-        for cid, _ in sorted(city_id.items(), key=lambda d: len(d[0])):
+        for cid, _ in sorted(city_id.items(), key=lambda d: len(d[0]))[:2000]:
             print(f'Start to crawl: {city_id[cid]}', end=' ')
             root_url = f'http://apimobile.meituan.com/group/v4/poi/pcsearch/{cid}/?offset=0&q={KEYWORD}'
             totalcount = get_totalcount(cid, root_url)
