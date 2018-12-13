@@ -23,12 +23,13 @@ class SoyoungSpider:
         self.keyword = keyword
         self.product_url = r'http://www.soyoung.com/searchNew/product'
         self.hospital_url = r'http://www.soyoung.com/searchNew/hospital'
+        self.page = 1
         self.params = {
-            'keyword': keyword,
+            'keyword': self.keyword,
             'cityId': '1',
             '_json': '1',
-            'page_size': '3000',
-            'page': '1',
+            'page_size': None,
+            'page': str(self.page),
             'sort': '0',
             'service': None,
             'coupon': None,
@@ -77,7 +78,8 @@ class SoyoungSpider:
     def save(self, save_path):
         log(f'[+] Total item: {len(self.item)}')
 
-        file = datetime.datetime.today().strftime('%Y-%m-%d') + f'{self.keyword}新氧销售情况.csv'
+        file = datetime.datetime.today().strftime('%Y-%m-%d') + \
+            f'{self.keyword}新氧销售情况.csv'
         path = os.path.join(save_path, file)
         log(f'[+] Start to save file to {path}')
         with open(path, "w+", newline='', encoding='utf-8') as csvfile:

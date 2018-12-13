@@ -3,10 +3,8 @@ import os
 import csv
 import datetime
 from selenium import webdriver
-from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.support.wait import WebDriverWait
 from lxml import etree
-
+import time
 
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument('--headless')
@@ -24,6 +22,7 @@ while flag:
     try:
         url = f'http://www.soyoung.com/searchNew/product?keyword=%E4%BC%8A%E5%A9%89&cityId=176&page_size=12&_json=1&sort=0&service=&coupon=&group=&maxprice=&minprice=&page={page}'
         browser.get(url)
+        time.sleep(3)
         html = browser.page_source
         tree = etree.HTML(html)
         # print(html)
@@ -44,6 +43,7 @@ while len(products):
     p_url = products.pop()
     print(f'Parse {p_url}')
     browser.get(p_url)
+    time.sleep(3)
     html = browser.page_source
     tree = etree.HTML(html)
 
@@ -52,15 +52,16 @@ while len(products):
     hospital = tree.xpath('//*[@class="hospital-logo"]/p/text()')
     address = tree.xpath('//*[@class="hospital"]//tr[3]/td[2]/text()')
     phone = tree.xpath('//*[@class="hospital"]//tr[4]/td[2]/text()')
-    info = {
-        'title': title[0] if title else None,
-        'link': p_url,
-        'price': price[0] if price else None,
-        'hospital': hospital[0] if hospital else None,
-        'address': address[0] if address else None,
-        'phone': phone[0] if phone else None}
-    print(info)
-    infos.append(info)
+    if title:
+        info = {
+            'title': title[0],
+            'link': p_url,
+            'price': price[0] if price else None,
+            'hospital': hospital[0] if hospital else None,
+            'address': address[0] if address else None,
+            'phone': phone[0] if phone else None}
+        print(info)
+        infos.append(info)
 
 if os.name == 'nt':
     save_path = r'E:\伊婉销售情况'

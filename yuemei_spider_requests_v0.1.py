@@ -102,7 +102,8 @@ class YueMeiSpider:
     def __get_price(self, tree):
         if tree is None:
             raise Exception("Null exception", tree)
-        price_node = tree.xpath('//i[@class="ft36"]/text()')
+        price_node = tree.xpath(
+            '//i[@class="ft36"]/text() | //*[@class="fs-20"]/text()')
         if price_node:
             price = clean_text(price_node[0])
             return price
@@ -153,7 +154,8 @@ class YueMeiSpider:
         log(f'[+] Total downlaod: {self.count}')
         log(f'[+] Total item: {self.item_count}')
 
-        file = datetime.datetime.today().strftime('%Y-%m-%d') + f'{self.keyword}悦美销售情况.csv'
+        file = datetime.datetime.today().strftime('%Y-%m-%d') + \
+            f'{self.keyword}悦美销售情况.csv'
         path = os.path.join(save_path, file)
         log(f'[+] Start to save file to {path}')
         with open(path, "w+", newline='', encoding='utf-8') as csvfile:
