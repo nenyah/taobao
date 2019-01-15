@@ -60,7 +60,9 @@ def get_result(df):
     url = 'http://www.gpsspg.com/maps.htm'
     web.get(url)
 
-    for InstitutionID, name, add in zip(df['InstitutionID'], df['InstitutionName'], df['Address']):
+    for InstitutionID, name, add in zip(df['InstitutionID'],
+                                        df['InstitutionName'],
+                                        df['Address']):
         if not pd.isna(add):
 
             info = {'InstitutionID': InstitutionID,
