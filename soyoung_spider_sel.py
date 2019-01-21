@@ -2,9 +2,10 @@ import json
 import os
 import csv
 import datetime
+import time
+import urllib
 from selenium import webdriver
 from lxml import etree
-import time
 
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument('--headless')
@@ -20,7 +21,22 @@ infos = []
 
 while flag:
     try:
-        url = f'http://www.soyoung.com/searchNew/product?keyword=%E4%BC%8A%E5%A9%89&cityId=176&page_size=12&_json=1&sort=0&service=&coupon=&group=&maxprice=&minprice=&page={page}'
+        url = 'http://www.soyoung.com/searchNew/product'
+        params = {
+            'keyword': '伊婉',
+            'cityId': 176,
+            'page_size': 12,
+            '_json': 1,
+            'sort': 0,
+            'service': '',
+            'coupon': '',
+            'group': '',
+            'maxprice': '',
+            'minprice': '',
+            'page': page
+        }
+        url += '?' + urllib.parse.urlencode(params)
+        print(url)
         browser.get(url)
         time.sleep(3)
         html = browser.page_source
@@ -42,8 +58,11 @@ while flag:
 while len(products):
     p_url = products.pop()
     print(f'Parse {p_url}')
-    browser.get(p_url)
-    time.sleep(3)
+    try:
+        time.sleep(3)
+        browser.get(p_url)
+    except Exception as e:
+        raise e
     html = browser.page_source
     tree = etree.HTML(html)
 
