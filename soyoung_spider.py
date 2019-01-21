@@ -39,16 +39,7 @@ class SoyoungSpider:
         }
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.81 Safari/537.36',
-            'Cookie': '__usersign__=1535530192535864254;\
-             _ga=GA1.2.761995634.1535530645;\
-             __jsluid=42a69d7898afb3425ce34bc3e9498dbf;\
-              __order_time__=undefined; \
-             msg_time=undefined; back_order_time=undefined; \
-             PHPSESSID=8b40626848426e8617b23acac65e82ce;\
-              __postion__=a%3A4%3A%7Bs%3A6%3A%22cityId%22%3Bs%3A3%3A%22176%22%3Bs%3A8%3A%22cityName%22%3Bs%3A9%3A%22%E5%AE%81%E6%B3%A2%E5%B8%82%22%3Bs%3A8%3A%22cityCode%22%3Bi%3A180%3Bs%3A3%3A%22jwd%22%3Bi%3A0%3B%7D;\
-               _gid=GA1.2.258180470.1537171632; \
-               Hm_lvt_b366fbb5465f5a86e1cc2871552e1fdb=1535530645,1537171632; \
-               Hm_lpvt_b366fbb5465f5a86e1cc2871552e1fdb=1537171632'
+            'Cookie':' __order_time__=undefined; msg_time=undefined; back_order_time=undefined; complain_time=undefined; PHPSESSID=dc1427d4919f33cba167586ea4de82ad; __usersign__=1548055243342040070; __jsluid=8ad3fabbff0e8cf49e5913b2c557317f; Hm_lvt_b366fbb5465f5a86e1cc2871552e1fdb=1548055244; _ga=GA1.2.920844667.1548055244; _gid=GA1.2.1448278221.1548055244; _gat=1; __postion__=a%3A4%3A%7Bs%3A6%3A%22cityId%22%3Bs%3A3%3A%22176%22%3Bs%3A8%3A%22cityName%22%3Bs%3A9%3A%22%E5%AE%81%E6%B3%A2%E5%B8%82%22%3Bs%3A8%3A%22cityCode%22%3Bi%3A180%3Bs%3A3%3A%22jwd%22%3Bi%3A0%3B%7D; Hm_lpvt_b366fbb5465f5a86e1cc2871552e1fdb=1548055257'
         }
         self.item = []
         self.count = 1

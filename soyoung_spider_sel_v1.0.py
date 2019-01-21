@@ -32,7 +32,7 @@ soyoung = client['soyoung']
 page_urls = soyoung['page_urls']
 detail_info = soyoung['detail_info']
 
-mongo_start = False
+mongo_start = True
 
 
 def get_detail_url(url: str) -> set:
@@ -78,7 +78,7 @@ def get_detail_url(url: str) -> set:
             else:
                 flag = False
         except Exception as e:
-            raise e
+            pass
     return products
 
 
@@ -174,11 +174,19 @@ if __name__ == "__main__":
     url = 'http://www.soyoung.com/searchNew/product'
 
     if mongo_start:
-        crawled = set(detail_info.find('link'))
-        all_urls = set(page_urls.find('link'))
+        if list(detail_info.find()):
+            crawled = set(detail_info.find('link'))
+        else:
+            crawled = set()
+        if list(page_urls.find()):
+            all_urls = set(page_urls.find('link'))
+        else:
+            get_detail_url(url)
+            all_urls = set(page_urls.find('link'))
         wait_for_crawl = all_urls - crawled
         get_all_detail_by_mongo(wait_for_crawl)
-
-    products = get_detail_url(url)
-    infos = get_all_detail(products)
-    to_csv(infos)
+        mongo_to_csv()
+    else:
+        products = get_detail_url(url)
+        infos = get_all_detail(products)
+        to_csv(infos)
