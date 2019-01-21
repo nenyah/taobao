@@ -28,7 +28,7 @@ class SoyoungSpider:
             'keyword': self.keyword,
             'cityId': '1',
             '_json': '1',
-            'page_size': None,
+            'page_size': '2643',
             'page': str(self.page),
             'sort': '0',
             'service': None,
