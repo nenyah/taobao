@@ -1,17 +1,18 @@
 #! /usr/bin/env python
 # -*- coding:utf-8 -*-
 
-import os
-import datetime
-import time
-import random
 import csv
+import datetime
+import logging
+import os
+import random
+import time
+
 import requests
 from lxml import etree
-import logging
 
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s - %(levelname)s- %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format='%(asctime)s - %(levelname)s- %(message)s')
 
 log = logging.info
 
@@ -32,9 +33,11 @@ class YueMeiSpider:
         self.count = 0
         self.item_count = 0
         self.header = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 \
+            'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 \
             (KHTML, like Gecko) Chrome/67.0.3396.62 Safari/537.36',
-            'Cookie': 'Hm_lvt_bbb28c93aca8fe7e95a44b2908aabce7=1533088179; \
+            'Cookie':
+            'Hm_lvt_bbb28c93aca8fe7e95a44b2908aabce7=1533088179; \
             _yma=1533088179134; ym_onlyk=1533088179018217; \
             ym_onlyknew=15330881790268;\
              UM_distinctid=164f32d22a40-04a8fdf830feb6-47e1039-1fa400-164f32d22a614e; \
@@ -114,7 +117,8 @@ class YueMeiSpider:
         if tree is None:
             raise Exception("Null exception", tree)
         address_node = tree.xpath(
-            '//p[@class="item3"]/text() | //*[@class="hospital"]//table//tr[3]/td[last()]/text()')
+            '//p[@class="item3"]/text() | //*[@class="hospital"]//table//tr[3]/td[last()]/text()'
+        )
         if address_node:
             address = clean_text(address_node[0]).replace('地址：', '')
             return address
@@ -123,8 +127,7 @@ class YueMeiSpider:
     def __get_hospital(self, tree):
         if tree is None:
             raise Exception("Null exception", tree)
-        hospital_node = tree.xpath(
-            '//p[@class="item1"]/a/text()')
+        hospital_node = tree.xpath('//p[@class="item1"]/a/text()')
         if hospital_node:
             hospital = clean_text(hospital_node[0])
             return hospital
@@ -133,8 +136,7 @@ class YueMeiSpider:
     def __get_phone(self, tree):
         if tree is None:
             raise Exception("Null exception", tree)
-        phone_node = tree.xpath(
-            '//div[@class="hosInfo"]/p[last()]/text()')
+        phone_node = tree.xpath('//div[@class="hosInfo"]/p[last()]/text()')
         if phone_node:
             phone = clean_text(phone_node[0])
             return phone
@@ -159,12 +161,9 @@ class YueMeiSpider:
         path = os.path.join(save_path, file)
         log(f'[+] Start to save file to {path}')
         with open(path, "w+", newline='', encoding='utf-8') as csvfile:
-            fieldnames = ['title',
-                          'price',
-                          'link',
-                          'address',
-                          'hospital',
-                          'phone']
+            fieldnames = [
+                'title', 'price', 'link', 'address', 'hospital', 'phone'
+            ]
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
             writer.writeheader()

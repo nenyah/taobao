@@ -37,13 +37,9 @@ def find_similar(df, threshold=0.8, id_col_num=0, name_col_num=3):
             s2 = set(list(name2))
 
             if check_similar(s1, s2) >= threshold:
-                info1 = {'ref': _id1,
-                         'similar_str': name1
-                         }
+                info1 = {'ref': _id1, 'similar_str': name1}
                 result.append(info1)
-                info2 = {'ref': _id2,
-                         'similar_str': name2
-                         }
+                info2 = {'ref': _id2, 'similar_str': name2}
                 result.append(info2)
     return result
 
@@ -53,7 +49,7 @@ def main(target_path, save_path, id_col_num, name_col_num):
     :param target_path：str 目标路径
     :param save_path: str 保存路径
     :param id_col_num： int 参考列号
-    :param name_col_num： int 需要对比字符串的列号 
+    :param name_col_num： int 需要对比字符串的列号
     """
     df = pd.read_excel(target_path)
     result = find_similar(df, id_col_num=id_col_num, name_col_num=name_col_num)

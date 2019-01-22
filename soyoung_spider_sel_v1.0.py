@@ -11,8 +11,8 @@ import pymongo
 from lxml import etree
 from selenium import webdriver
 
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s - %(levelname)s- %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format='%(asctime)s - %(levelname)s- %(message)s')
 log = logging.info
 
 
@@ -58,7 +58,7 @@ def get_detail_url(url: str) -> set:
                 'minprice': '',
                 'page': page
             }
-            url += '?' + urllib.parse.urlencode(params)
+            url = url + '?' + urllib.parse.urlencode(params)
             log(url)
             driver.get(url)
             time.sleep(3)
@@ -108,7 +108,8 @@ def get_detail_info(url: str) -> dict:
             'hospital': hospital[0] if hospital else None,
             'address': address[0] if address else None,
             'phone': phone[0] if phone else None,
-            'crawl_date': datetime.datetime.today()}
+            'crawl_date': datetime.datetime.today()
+        }
         if mongo_start:
             detail_info.insert_one(info)
         log(info)
@@ -124,13 +125,10 @@ def to_csv(infos: list):
     file = datetime.datetime.today().strftime('%Y-%m-%d') + '伊婉新氧销售情况.csv'
     path = os.path.join(save_path, file)
     with open(path, "w+", newline='', encoding='utf-8') as csvfile:
-        fieldnames = ['title',
-                      'price',
-                      'link',
-                      'address',
-                      'hospital',
-                      'phone',
-                      'crawl_date']
+        fieldnames = [
+            'title', 'price', 'link', 'address', 'hospital', 'phone',
+            'crawl_date'
+        ]
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
         writer.writeheader()
@@ -175,14 +173,23 @@ if __name__ == "__main__":
 
     if mongo_start:
         if list(detail_info.find()):
-            crawled = set(detail_info.find('link'))
+            crawled = set(info['link'] for info in detail_info.find({}, {
+                "link": 1,
+                "_id": 0
+            }))
         else:
             crawled = set()
         if list(page_urls.find()):
-            all_urls = set(page_urls.find('link'))
+            all_urls = set(info['link'] for info in page_urls.find({}, {
+                "link": 1,
+                "_id": 0
+            }))
         else:
             get_detail_url(url)
-            all_urls = set(page_urls.find('link'))
+            all_urls = set(info['link'] for info in page_urls.find({}, {
+                "link": 1,
+                "_id": 0
+            }))
         wait_for_crawl = all_urls - crawled
         get_all_detail_by_mongo(wait_for_crawl)
         mongo_to_csv()
