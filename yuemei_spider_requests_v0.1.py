@@ -116,9 +116,10 @@ class YueMeiSpider:
     def __get_address(self, tree):
         if tree is None:
             raise Exception("Null exception", tree)
-        address_node = tree.xpath(
-            '//p[@class="item3"]/text() | //*[@class="hospital"]//table//tr[3]/td[last()]/text()'
-        )
+        pat1 = '//p[@class="item3"]/text()'
+        pat2 = '//*[@class="hospital"]//table//tr[3]/td[last()]/text()'
+        rule = pat1 + ' | ' + pat2
+        address_node = tree.xpath(rule)
         if address_node:
             address = clean_text(address_node[0]).replace('地址：', '')
             return address

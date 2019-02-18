@@ -1,13 +1,15 @@
+import json
+import re
+import time
+from urllib.parse import quote
+
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-from urllib.parse import quote
-import re
-import json
-from settings import *
 
+from settings import *
 
 # chrome_options = webdriver.ChromeOptions()
 # chrome_options.add_argument('--headless')
@@ -29,14 +31,19 @@ def index_page(page):
     """
     print('正在爬取第', page, '页')
     try:
-        url = 'https://s.taobao.com/search?q=' + \
+        url = 'https://www.taobao.com/'
+        product_url = 'https://s.taobao.com/search?q=' + \
             quote(KEYWORD) + '&bcoffset=12&s=' + str((page - 1) * 44)
         browser.get(url)
-
+        time.sleep(200)
+        browser.get(product_url)
         wait.until(
-            EC.text_to_be_present_in_element((By.CSS_SELECTOR, '#mainsrp-pager li.item.active > span'), str(page)))
-        wait.until(EC.presence_of_element_located(
-            (By.CSS_SELECTOR, '.m-itemlist .items .item')))
+            EC.text_to_be_present_in_element(
+                (By.CSS_SELECTOR, '#mainsrp-pager li.item.active > span'),
+                str(page)))
+        wait.until(
+            EC.presence_of_element_located((By.CSS_SELECTOR,
+                                            '.m-itemlist .items .item')))
         get_products(page)
     except TimeoutException:
         index_page(page)

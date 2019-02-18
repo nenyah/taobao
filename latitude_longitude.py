@@ -21,10 +21,7 @@ def save_to_mongo(result):
 
 def get_lat_and_lng(address):
     url = r"http://api.map.baidu.com/cloudgc/v1?"
-    params = {
-        'ak': 'o6rM6ZnQUMujr0CLvkdqOCeR0Guev1WS',
-        'address': address
-    }
+    params = {'ak': '*******', 'address': address}
     try:
         r = requests.get(url, params=params)
         return r.json()['result']['location']
@@ -61,20 +58,23 @@ def get_result(df):
     web.get(url)
 
     for InstitutionID, name, add in zip(df['InstitutionID'],
-                                        df['InstitutionName'],
-                                        df['Address']):
+                                        df['InstitutionName'], df['Address']):
         if not pd.isna(add):
 
-            info = {'InstitutionID': InstitutionID,
-                    'Address': add,
-                    'lat': get_lat(web, add)}
+            info = {
+                'InstitutionID': InstitutionID,
+                'Address': add,
+                'lat': get_lat(web, add)
+            }
             print(info)
             save_to_mongo(info)
         else:
 
-            info = {'InstitutionID': InstitutionID,
-                    'Address': None,
-                    'lat': get_lat(web, name)}
+            info = {
+                'InstitutionID': InstitutionID,
+                'Address': None,
+                'lat': get_lat(web, name)
+            }
             print(info)
             save_to_mongo(info)
         result.append(info)

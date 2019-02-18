@@ -20,6 +20,8 @@ def start_chrome():
     """开启chrome"""
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('log-level=3')
     driver = webdriver.Chrome(chrome_options=chrome_options)
     return driver
 
@@ -77,7 +79,7 @@ def get_detail_url(url: str) -> set:
                 page += 1
             else:
                 flag = False
-        except Exception as e:
+        except TimeoutError:
             pass
     return products
 
@@ -90,7 +92,7 @@ def get_detail_info(url: str) -> dict:
     try:
         time.sleep(3)
         driver.get(url)
-    except Exception as e:
+    except TimeoutError:
         return
     html = driver.page_source
     tree = etree.HTML(html)
