@@ -43,17 +43,18 @@ class SoyoungSpider:
         hasmore = r.json()['responseData']['has_more']
         for hospital in hospitals:
             for product in hospital['products']:
-                info = {
-                    'hospital_id': hospital['hospital_id'],
-                    'hospital': hospital['name_cn'],
-                    'address': hospital['address'],
-                    'title': product['title'],
-                    'price': product['price_online'],
-                    'link': 'http://y.soyoung.com/cp' + product['pid'],
-                }
-                self.item.append(info)
-                log(f"[+] {self.count} Start to download {info['link']}")
-                self.count += 1
+                if '伊婉' in product['title']:
+                    info = {
+                        'hospital_id': hospital['hospital_id'],
+                        'hospital': hospital['name_cn'],
+                        'address': hospital['address'],
+                        'title': product['title'],
+                        'price': product['price_online'],
+                        'link': 'http://y.soyoung.com/cp' + product['pid'],
+                    }
+                    self.item.append(info)
+                    log(f"[+] {self.count} Start to download {info['link']}")
+                    self.count += 1
 
         if hasmore:
             self.page += 1
