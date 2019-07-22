@@ -1,6 +1,16 @@
 # coding:utf-8
-import pandas as pd
 import fire
+import pandas as pd
+from fuzzywuzzy import fuzz
+
+
+def check_similar_with_fuzz(s1, s2):
+    """比较两个字符串的相似度
+    :param s1: string 字符串1
+    :param s2: string 字符串2
+    :return: float 返回相似度
+    """
+    return fuzz.ratio(s1, s2)
 
 
 def check_similar(s1, s2):
@@ -30,13 +40,13 @@ def find_similar(df, threshold=0.8, id_col_num=0, name_col_num=3):
     for i in range(len(df)):
         _id1 = df.iloc[i, id_col_num]
         name1 = df.iloc[i, name_col_num]
-        s1 = set(list(name1))
+        s1 = name1
         for j in range(i + 1, len(df)):
             _id2 = df.iloc[j, id_col_num]
             name2 = df.iloc[j, name_col_num]
-            s2 = set(list(name2))
+            s2 = name2
 
-            if check_similar(s1, s2) >= threshold:
+            if check_similar_with_fuzz(s1, s2) >= threshold:
                 info1 = {'ref': _id1, 'similar_str': name1}
                 result.append(info1)
                 info2 = {'ref': _id2, 'similar_str': name2}
@@ -52,7 +62,8 @@ def main(target_path, save_path, id_col_num, name_col_num):
     :param name_col_num： int 需要对比字符串的列号
     """
     df = pd.read_excel(target_path)
-    result = find_similar(df, id_col_num=id_col_num, name_col_num=name_col_num)
+    result = find_similar(
+        df, threshold=85, id_col_num=id_col_num, name_col_num=name_col_num)
     out = pd.DataFrame(result)
     out.to_csv(save_path, index=False)
 

@@ -4,6 +4,7 @@ import datetime
 import time
 import random
 from lxml import etree
+import csv
 
 KEYWORD = '伊婉'
 _path = r"E:\伊婉销售情况"

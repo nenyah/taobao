@@ -2,6 +2,7 @@ import json
 import re
 import time
 from urllib.parse import quote
+import random
 
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
@@ -35,7 +36,7 @@ def index_page(page):
         product_url = 'https://s.taobao.com/search?q=' + \
             quote(KEYWORD) + '&bcoffset=12&s=' + str((page - 1) * 44)
         browser.get(url)
-        time.sleep(200)
+        time.sleep(random.randint(1,10))
         browser.get(product_url)
         wait.until(
             EC.text_to_be_present_in_element(
