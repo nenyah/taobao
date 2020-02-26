@@ -5,6 +5,7 @@ import csv
 import datetime
 import logging
 import os
+import itertools
 
 import requests
 
@@ -22,8 +23,11 @@ class SoyoungSpider:
 
     def __init__(self, keyword):
         self.keyword = keyword
-        self.product_url = r'http://www.soyoung.com/searchNew/product?keyword={}&cityId=1&page_size=100&_json=1&sort=0&page={}'
-        self.hospital_url = r'http://www.soyoung.com/searchNew/hospital?keyword={}&cityId=1&page_size=100&_json=1&sort=0&page={}'
+        self.root = 'http://www.soyoung.com/searchNew/'
+        self.product_url = self.root + \
+            r'product?keyword={}&cityId=1&page_size=100&_json=1&sort=0&page={}'
+        self.hospital_url = self.root + \
+            r'hospital?keyword={}&cityId=1&page_size=100&_json=1&sort=0&page={}'
         self.page = 1
         self.headers = {
             'User-Agent':
@@ -51,11 +55,10 @@ class SoyoungSpider:
             self.item.append(info)
             log(f"[+] {self.count} Start to download {info['link']}")
             self.count += 1
+
         if hasmore:
             self.page += 1
             self.get_base_info()
-        else:
-            self.page = 1
 
     def get_hospital_info(self):
         url = self.hospital_url.format(self.keyword, self.page)
@@ -71,12 +74,15 @@ class SoyoungSpider:
 
         if hasmore:
             self.page += 1
-            self.get_base_info()
+            self.get_hospital_info()
 
-        for hospital in self.hospitals:
-            for index in range(len(self.item)):
-                if hospital['hospital_id'] == self.item[index]['hospital_id']:
-                    self.item[index]['address'] = hospital['address']
+    def match_address(self):
+        for hospital, product in itertools.product(self.hospitals,
+                                                   self.item.copy()):
+            if hospital['hospital_id'] == product['hospital_id']:
+                self.item.remove(product)
+                product['address'] = hospital['address']
+                self.item.append(product)
 
     def save(self, save_path):
         log(f'[+] Total item: {len(self.item)}')
@@ -97,20 +103,21 @@ class SoyoungSpider:
                 writer.writerow(row)
         log('[+] Save success')
 
-    def run(self):
-        self.get_base_info()
+    def run(self, save_path):
         self.get_hospital_info()
+        self.get_base_info()
+        self.match_address()
+        self.save(save_path)
 
 
 def main():
     keyword = '伊婉'
     if os.name == 'nt':
-        save_path = r'E:\伊婉销售情况'
+        save_path = r'E:\玻尿酸销售情况'
     else:
         save_path = '/home/steven/sales_collect'
     spider = SoyoungSpider(keyword)
-    spider.run()
-    spider.save(save_path)
+    spider.run(save_path)
 
 
 if __name__ == '__main__':
